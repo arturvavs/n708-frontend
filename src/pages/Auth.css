@@ -1,0 +1,215 @@
+.auth-container {
+  max-width: 600px; /* Aumentado para acomodar os novos campos */
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.auth-form {
+  background-color: white;
+  padding: 30px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  margin-bottom: 30px; /* Adicionado espaço na parte inferior */
+}
+
+.register-form {
+  max-width: 100%;
+}
+
+.auth-form h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: var(--primary-color);
+  font-size: 1.8rem;
+}
+
+.form-section-title {
+  margin-top: 30px;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--light-gray);
+  color: var(--primary-color);
+  font-size: 1.2rem;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 0;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--light-gray);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+.form-group input.error {
+  border-color: var(--error-color);
+}
+
+/* Botões de seleção de tipo de usuário */
+.user-type-toggle {
+  display: flex;
+  margin-bottom: 20px;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  border: 1px solid var(--light-gray);
+}
+
+.user-type-btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background-color: var(--light-gray);
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.user-type-btn.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.user-type-btn:first-child {
+  border-right: 1px solid #ccc;
+}
+
+.user-type-btn:hover:not(.active) {
+  background-color: #d0d0d0;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  margin-top: 25px;
+  font-weight: bold;
+}
+
+.auth-redirect {
+  text-align: center;
+  margin-top: 25px;
+  font-size: 0.9rem;
+  color: var(--medium-gray);
+}
+
+.auth-redirect a {
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+.auth-redirect a:hover {
+  text-decoration: underline;
+}
+
+/* Mensagem de erro individual para campos */
+.field-error {
+  color: var(--error-color);
+  font-size: 0.85rem;
+  margin-top: 5px;
+}
+
+/* Mensagem de sucesso */
+.success-message {
+  background-color: var(--success-color);
+  color: white;
+  padding: 10px;
+  border-radius: var(--border-radius);
+  margin-bottom: 15px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Campos obrigatórios */
+.form-group label::after {
+  content: ' *';
+  color: var(--error-color);
+}
+
+.form-group label[for="complement"]::after {
+  content: '';
+}
+
+/* Responsividade para dispositivos móveis */
+@media screen and (max-width: 768px) {
+  .auth-container {
+    padding: 15px;
+  }
+  
+  .auth-form {
+    padding: 20px;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .form-group input {
+    padding: 10px;
+  }
+  
+  .user-type-toggle {
+    margin-bottom: 15px;
+  }
+  
+  .user-type-btn {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Para telas muito pequenas */
+@media screen and (max-width: 480px) {
+  .auth-container {
+    padding: 10px;
+  }
+  
+  .auth-form {
+    padding: 15px;
+  }
+  
+  .auth-form h2 {
+    font-size: 1.5rem;
+  }
+  
+  .form-section-title {
+    font-size: 1.1rem;
+  }
+}

@@ -1,0 +1,148 @@
+:root {
+  --primary-color: #1976d2;
+  --secondary-color: #f5f5f5;
+  --text-color: #333;
+  --light-gray: #e0e0e0;
+  --border-radius: 4px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+}
+
+a {
+  text-decoration: none;
+  color: var(--primary-color);
+}
+
+.main-container {
+  padding-top: 24px;
+  padding-bottom: 24px;
+  min-height: calc(100vh - 64px);
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .main-container {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+}
+
+/* Status colors */
+.status-aberto {
+  color: #f44336;
+}
+
+.status-em-andamento {
+  color: #ff9800;
+}
+
+.status-resolvido {
+  color: #4caf50;
+}
+
+/* Card hover effect */
+.MuiCard-root {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.MuiCard-root:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Form styles */
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Image preview */
+.image-preview {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  margin-top: 16px;
+  border-radius: 4px;
+  border: 1px solid var(--light-gray);
+}
+
+/* Welcome banner */
+.welcome-banner {
+  background-color: #fff;
+  padding: 40px 20px;
+  text-align: center;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+}
+
+/* Feature card */
+.feature-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+}
+
+/* Button styles */
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.button-container button {
+  margin-left: 8px;
+}
+
+/* Login/Register forms */
+.auth-form {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 24px;
+  background-color: #fff;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Ticket card */
+.ticket-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.ticket-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.ticket-title {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 70%;
+}
+
+.ticket-description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  margin-bottom: 16px;
+}

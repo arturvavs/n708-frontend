@@ -1,0 +1,44 @@
+.mock-note {
+  font-size: 0.8rem;
+  color: #999;
+  font-style: italic;
+  text-align: center;
+  margin-top: 5px;
+}
+
+.demo-note {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border: 1px dashed #ddd;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #666;
+  text-align: center;
+  font-style: italic;
+}
+
+.demo-accounts {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f2f8ff;
+  border: 1px solid #cfe2ff;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.demo-accounts p {
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #0d6efd;
+}
+
+.demo-accounts ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.demo-accounts li {
+  margin-bottom: 5px;
+}
