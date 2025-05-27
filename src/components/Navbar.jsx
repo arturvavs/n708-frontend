@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import './Navbar.css';
 
-function Navbar({ user, onLogout }) {
+function Navbar({ user, onLogout, canCreateTickets }) {
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -12,8 +12,15 @@ function Navbar({ user, onLogout }) {
         <div className="nav-menu">
           {user ? (
             <>
-              <Link to="/dashboard" className="nav-link">Painel</Link>
-              <Link to="/create-ticket" className="nav-link">Novo Ticket</Link>
+              <Link to="/dashboard" className="nav-link">
+                {user.document_type === 'cnpj' ? 'Tickets Disponíveis' : 'Meus Tickets'}
+              </Link>
+              {canCreateTickets && (
+                <Link to="/create-ticket" className="nav-link">Novo Ticket</Link>
+              )}
+              <span className="user-info">
+                {user.name} ({user.document_type === 'cnpj' ? 'Empresa' : 'Pessoa Física'})
+              </span>
               <button onClick={onLogout} className="logout-btn">Sair</button>
             </>
           ) : (

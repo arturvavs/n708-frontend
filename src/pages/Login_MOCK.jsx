@@ -1,7 +1,34 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import './Auth.css';
-import { API_BASE_URL } from '../services/api';
+
+// Usuários fictícios para teste
+const mockUsers = [
+  {
+    id: 1,
+    name: 'Admin Teste',
+    email: 'admin@example.com',
+    document: '000.000.000-00',
+    document_type: 'cpf',
+    role: 'admin'
+  },
+  {
+    id: 2,
+    name: 'Prefeitura Teste',
+    email: 'prefeitura@example.com',
+    document: '00.000.000/0000-00',
+    document_type: 'cnpj',
+    role: 'organization'
+  },
+  {
+    id: 3,
+    name: 'Usuário Comum',
+    email: 'usuario@example.com',
+    document: '123.456.789-00',
+    document_type: 'cpf',
+    role: 'user'
+  }
+];
 
 function Login({ onLogin }) {
   const [email, setEmail] = useState('');
@@ -22,6 +49,7 @@ function Login({ onLogin }) {
     }
   }, [location]);
 
+  // Função simplificada para login local sem API
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -34,30 +62,23 @@ function Login({ onLogin }) {
       setError('');
       setLoading(true);
       
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      });
+      // Simulação de tempo de resposta
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      const data = await response.json();
+      // Verificar se o email existe nos usuários fictícios
+      const user = mockUsers.find(user => user.email.toLowerCase() === email.toLowerCase());
       
-      if (!response.ok) {
-        throw new Error(data.error || 'Falha ao fazer login');
+      if (!user) {
+        throw new Error('Usuário não encontrado');
       }
       
-      onLogin(data.token, data.user);
+      // Em modo de teste, qualquer senha é aceita
+      const token = 'fake-jwt-token-' + Math.random().toString(36).substring(2);
       
-      // Redirecionar baseado no tipo de usuário
-      if (data.user.role === 'organization') {
-        navigate('/available-tickets');
-      } else {
-        navigate('/dashboard');
-      }
+      onLogin(token, user);
+      navigate('/dashboard');
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Falha ao fazer login');
     } finally {
       setLoading(false);
     }
@@ -101,17 +122,15 @@ function Login({ onLogin }) {
           Não tem uma conta? <Link to="/register">Cadastre-se</Link>
         </p>
         
-        {/* Dados para facilitar o teste com usuários padrão */}
+        {/* Dados para facilitar o teste */}
         <div className="demo-accounts">
-          <p>Contas padrão criadas automaticamente:</p>
+          <p>Contas de demonstração:</p>
           <ul>
-            <li><strong>Admin:</strong> admin@example.com - senha: admin123</li>
-            <li><strong>Prefeitura:</strong> prefeitura@example.com - senha: org123</li>
+            <li>Admin: admin@example.com</li>
+            <li>Organização: prefeitura@example.com</li>
+            <li>Usuário: usuario@example.com</li>
+            <li>Senha: qualquer senha funciona</li>
           </ul>
-          <p style={{marginTop: '10px', fontSize: '0.8rem', fontStyle: 'italic'}}>
-            * Empresas cadastradas são redirecionadas para "Tickets Disponíveis"<br/>
-            * Use o registro para criar uma conta de empresa
-          </p>
         </div>
       </form>
     </div>

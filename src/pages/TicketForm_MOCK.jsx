@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './TicketForm.css';
 
-function TicketForm({ user, token }) {
+function TicketForm({ user, token, createTicket }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [address, setAddress] = useState('');
@@ -41,33 +41,28 @@ function TicketForm({ user, token }) {
       setError('');
       setLoading(true);
       
-      const formData = new FormData();
-      formData.append('title', title);
-      formData.append('description', description);
-      formData.append('address', address);
+      // Simular atraso para dar feedback visual
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
-      if (image) {
-        formData.append('image', image);
-      }
+      // Criar objeto de dados do ticket
+      const ticketData = {
+        title,
+        description,
+        address,
+        image: image ? fileName : null
+      };
       
-      const response = await fetch('http://localhost:5000/api/tickets', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: formData
-      });
+      // Usar a função de criação de ticket passada do App.jsx
+      const success = createTicket(ticketData);
       
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.error || 'Erro ao criar ticket');
+      if (!success) {
+        throw new Error('Erro ao criar ticket');
       }
       
       // Redirecionar para dashboard com mensagem de sucesso
       navigate('/dashboard?message=Ticket criado com sucesso!');
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Erro ao criar ticket');
     } finally {
       setLoading(false);
     }
@@ -154,6 +149,10 @@ function TicketForm({ user, token }) {
           </button>
         </div>
       </form>
+      
+      <div className="demo-note">
+        <p>Nota: No modo de teste, os dados são armazenados temporariamente na memória do navegador.</p>
+      </div>
     </div>
   );
 }

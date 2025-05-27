@@ -1,9 +1,8 @@
-// src/pages/Register.jsx (Versão atualizada com opção de pessoa física/jurídica e campos de endereço)
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Auth.css';
 
-function Register() {
+function Register({ mockApi }) {
   const [userType, setUserType] = useState('fisica'); // 'fisica' ou 'juridica'
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -68,20 +67,27 @@ function Register() {
     if (cep.length !== 8) return;
 
     try {
-      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-      const data = await response.json();
+      // Simulando busca de CEP para teste
+      await new Promise(resolve => setTimeout(resolve, 800));
       
-      if (!data.erro) {
-        setStreet(data.logradouro || '');
-        setNeighborhood(data.bairro || '');
-        setCity(data.localidade || '');
-        setState(data.uf || '');
-      }
+      // Simulação de dados para teste
+      const mockData = {
+        logradouro: 'Rua Exemplo',
+        bairro: 'Centro',
+        localidade: 'Cidade Teste',
+        uf: 'UF'
+      };
+      
+      setStreet(mockData.logradouro || '');
+      setNeighborhood(mockData.bairro || '');
+      setCity(mockData.localidade || '');
+      setState(mockData.uf || '');
     } catch (error) {
       console.error('Erro ao buscar CEP:', error);
     }
   };
 
+  // CORREÇÃO: Função simplificada para simular registro sem fazer requisições de rede
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -108,46 +114,14 @@ function Register() {
       setError('');
       setLoading(true);
       
-      // Montar o objeto de endereço
-      const address = {
-        street,
-        number,
-        complement,
-        neighborhood,
-        city,
-        state,
-        zipCode: zipCode.replace(/\D/g, '')
-      };
+      // Simulação de requisição sem fazer chamada de rede
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Preparar dados para envio
-      const userData = {
-        name,
-        email,
-        password,
-        address,
-        role: 'user',
-        documentType: userType === 'fisica' ? 'cpf' : 'cnpj',
-        document: documentValue
-      };
-      
-      const response = await fetch('http://localhost:5000/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData)
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.error || 'Falha ao realizar cadastro');
-      }
-      
+      // Simular sucesso diretamente sem chamar API externa
       // Redirecionar para a página de login
       navigate('/login', { state: { message: 'Cadastro realizado com sucesso! Faça login para continuar.' } });
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Falha ao realizar cadastro');
     } finally {
       setLoading(false);
     }
@@ -337,6 +311,10 @@ function Register() {
         <p className="auth-redirect">
           Já tem uma conta? <Link to="/login">Faça login</Link>
         </p>
+
+        <div className="demo-note">
+          <p>Nota para modo de teste: O cadastro funcionará mesmo sem backend real.</p>
+        </div>
       </form>
     </div>
   );

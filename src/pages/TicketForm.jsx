@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './TicketForm.css';
+import { API_BASE_URL } from '../services/api';
 
-function TicketForm({ user, token, createTicket }) {
+function TicketForm({ user, token }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [address, setAddress] = useState('');
@@ -41,27 +42,41 @@ function TicketForm({ user, token, createTicket }) {
       setError('');
       setLoading(true);
       
-      // Simular atraso para dar feedback visual
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      console.log('Enviando dados:', { title, description, address, image: image?.name });
       
-      // Criar objeto de dados do ticket
-      const ticketData = {
-        title,
-        description,
-        address,
-        image: image ? fileName : null
-      };
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('description', description);
+      formData.append('address', address);
       
-      // Usar a função de criação de ticket passada do App.jsx
-      const success = createTicket(ticketData);
+      if (image) {
+        formData.append('image', image);
+      }
       
-      if (!success) {
-        throw new Error('Erro ao criar ticket');
+      console.log('FormData criado, fazendo requisição...');
+      
+      const response = await fetch(`${API_BASE_URL}/tickets`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+          // Não adicionar Content-Type para FormData - o browser define automaticamente
+        },
+        body: formData
+      });
+      
+      console.log('Response status:', response.status);
+      
+      const data = await response.json();
+      console.log('Response data:', data);
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao criar ticket');
       }
       
       // Redirecionar para dashboard com mensagem de sucesso
       navigate('/dashboard?message=Ticket criado com sucesso!');
     } catch (err) {
+      console.error('Erro na criação do ticket:', err);
       setError(err.message || 'Erro ao criar ticket');
     } finally {
       setLoading(false);
@@ -83,6 +98,7 @@ function TicketForm({ user, token, createTicket }) {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
+            placeholder="Ex: Buraco na calçada"
           />
         </div>
         
@@ -94,7 +110,7 @@ function TicketForm({ user, token, createTicket }) {
             value={address}
             onChange={(e) => setAddress(e.target.value)}
             required
-            placeholder="Ex: Rua das Flores, 123 - Bairro"
+            placeholder="Ex: Rua das Flores, 123 - Centro"
           />
         </div>
         
@@ -145,13 +161,13 @@ function TicketForm({ user, token, createTicket }) {
             className="btn btn-primary" 
             disabled={loading}
           >
-            {loading ? 'Enviando...' : 'Enviar'}
+            {loading ? 'Criando...' : 'Criar Ticket'}
           </button>
         </div>
       </form>
       
-      <div className="demo-note">
-        <p>Nota: No modo de teste, os dados são armazenados temporariamente na memória do navegador.</p>
+      <div className="info-note">
+        <p><strong>Dica:</strong> Forneça o máximo de detalhes possível sobre o problema para que as empresas possam avaliar melhor o trabalho necessário.</p>
       </div>
     </div>
   );

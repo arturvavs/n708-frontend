@@ -146,6 +146,16 @@
   flex-grow: 1;
 }
 
+.ticket-company {
+  font-size: 0.9rem;
+  color: var(--primary-color);
+  margin-bottom: 10px;
+  padding: 8px;
+  background-color: #f0f7ff;
+  border-radius: 4px;
+  border-left: 3px solid var(--primary-color);
+}
+
 .ticket-footer {
   display: flex;
   justify-content: space-between;
@@ -165,6 +175,21 @@
 .ticket-date::before {
   content: '🕒';
   margin-right: 5px;
+}
+
+.ticket-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-success {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: #2e7d32;
 }
 
 /* Responsividade para dispositivos móveis */
@@ -194,5 +219,15 @@
   
   .tickets-grid {
     grid-template-columns: 1fr;
+  }
+  
+  .ticket-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .ticket-actions .btn {
+    width: 100%;
+    margin-bottom: 5px;
   }
 }

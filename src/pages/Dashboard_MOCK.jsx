@@ -1,53 +1,52 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './Dashboard.css';
 
-function Dashboard({ user, token }) {
+function Dashboard({ user, token, getTickets }) {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   
-  // Verificar se existe uma mensagem de sucesso na navegação
+  const location = useLocation();
+  
+  // Verificar se há uma mensagem de sucesso (por exemplo, após criar um ticket)
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(location.search);
     const message = params.get('message');
     if (message) {
       setSuccessMessage(message);
       // Limpar a mensagem após 5 segundos
       setTimeout(() => setSuccessMessage(''), 5000);
+      
+      // Atualizar a URL sem a query string
+      window.history.replaceState({}, document.title, location.pathname);
     }
-  }, []);
+  }, [location]);
   
   useEffect(() => {
     fetchTickets();
-  }, [statusFilter, token]);
+  }, [statusFilter]);
   
   const fetchTickets = async () => {
     try {
       setLoading(true);
       
-      let url = 'http://localhost:5000/api/tickets';
-      if (statusFilter) {
-        url += `?status=${statusFilter}`;
-      }
+      // Simular atraso para dar feedback visual
+      await new Promise(resolve => setTimeout(resolve, 800));
       
-      const response = await fetch(url, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      // Usar a função de filtro passada do App.jsx
+      const filters = {
+        status: statusFilter,
+        userId: user.id,
+        userRole: user.role
+      };
       
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.error || 'Erro ao carregar tickets');
-      }
-      
-      setTickets(data.tickets);
+      const filteredTickets = getTickets(filters);
+      setTickets(filteredTickets);
     } catch (err) {
-      setError(err.message);
+      setError('Erro ao carregar tickets');
     } finally {
       setLoading(false);
     }

@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Auth.css';
+import { API_BASE_URL } from '../services/api';
 
-function Register({ mockApi }) {
+function Register() {
   const [userType, setUserType] = useState('fisica'); // 'fisica' ou 'juridica'
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -67,27 +68,20 @@ function Register({ mockApi }) {
     if (cep.length !== 8) return;
 
     try {
-      // Simulando busca de CEP para teste
-      await new Promise(resolve => setTimeout(resolve, 800));
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await response.json();
       
-      // Simulação de dados para teste
-      const mockData = {
-        logradouro: 'Rua Exemplo',
-        bairro: 'Centro',
-        localidade: 'Cidade Teste',
-        uf: 'UF'
-      };
-      
-      setStreet(mockData.logradouro || '');
-      setNeighborhood(mockData.bairro || '');
-      setCity(mockData.localidade || '');
-      setState(mockData.uf || '');
+      if (!data.erro) {
+        setStreet(data.logradouro || '');
+        setNeighborhood(data.bairro || '');
+        setCity(data.localidade || '');
+        setState(data.uf || '');
+      }
     } catch (error) {
       console.error('Erro ao buscar CEP:', error);
     }
   };
 
-  // CORREÇÃO: Função simplificada para simular registro sem fazer requisições de rede
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -114,14 +108,52 @@ function Register({ mockApi }) {
       setError('');
       setLoading(true);
       
-      // Simulação de requisição sem fazer chamada de rede
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Montar o objeto de endereço
+      const address = {
+        street,
+        number,
+        complement,
+        neighborhood,
+        city,
+        state,
+        zipCode: zipCode.replace(/\D/g, '')
+      };
       
-      // Simular sucesso diretamente sem chamar API externa
+      // Preparar dados para envio
+      const userData = {
+        name,
+        email,
+        password,
+        address,
+        role: userType === 'fisica' ? 'user' : 'organization',
+        documentType: userType === 'fisica' ? 'cpf' : 'cnpj',
+        document: documentValue
+      };
+      
+      // Fazer a requisição diretamente (sem usar api.js que tem problema)
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Falha ao realizar cadastro');
+      }
+      
       // Redirecionar para a página de login
-      navigate('/login', { state: { message: 'Cadastro realizado com sucesso! Faça login para continuar.' } });
+      navigate('/login', { 
+        state: { 
+          message: 'Cadastro realizado com sucesso! Faça login para continuar.' 
+        } 
+      });
     } catch (err) {
-      setError(err.message || 'Falha ao realizar cadastro');
+      console.error('Erro no registro:', err);
+      setError(err.message || 'Erro ao realizar cadastro');
     } finally {
       setLoading(false);
     }
@@ -311,10 +343,6 @@ function Register({ mockApi }) {
         <p className="auth-redirect">
           Já tem uma conta? <Link to="/login">Faça login</Link>
         </p>
-
-        <div className="demo-note">
-          <p>Nota para modo de teste: O cadastro funcionará mesmo sem backend real.</p>
-        </div>
       </form>
     </div>
   );
